@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Node Authentication
+  if !user           
+    p Login or Register with:
+    a(href="/login", class="btn btn-default")
+        i.material-icons.left lock_open
+        |Login
+    a(href="/signup", class="btn btn-default")
+        i.material-icons.left account_circle
+        |Signup
