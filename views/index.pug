@@ -1,12 +1,44 @@
 extends layout
 
 block content
-  h1 Node Authentication
-  if !user           
-    p Login or Register with:
-    a(href="/login", class="btn btn-default")
-        i.material-icons.left lock_open
-        |Login
-    a(href="/signup", class="btn btn-default")
-        i.material-icons.left account_circle
-        |Signup
+  h1 Nightlife Tracker
+   //- LOGIN FORM 
+  form(action="/", method="post")
+    .row
+      .input-field.col.s12
+        input#location(name="location", type="text", value=location)
+        label(for='location') What is your location?
+    button.waves-effect.waves-light.btn(type="submit") Search
+  if bars && bars.length > 0
+    h1 Local bars
+    ul.collection
+      each bar in bars
+        li.collection-item
+          .row.valign-wrapper
+            .col.s1
+              img.responsive-img(src=bar.image_url)
+            .col.s11
+              h4
+                a.black-text(href=bar.url, target="_blank")= bar.name + ' '
+                a.waves-effect.waves-light.yellow.black-text.btn.going(id=bar.id)
+                  = bar.going + ' Going'
+              em= bar.review
+block script
+  if !user
+    script.
+      $(()=>{
+        $('.going').attr('href', '/login')
+      })
+  if user
+    script.
+      $(()=>{
+        $('.going').click(event => {
+          const barId = event.target.id
+          $.getJSON('/api/going/check/' + barId, result => {
+            $('#' + barId).text(result.going + ' Going')
+          })
+        })
+      })
+      
+    
+    
